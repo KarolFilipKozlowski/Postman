@@ -24,7 +24,7 @@
 					}
 				],
 				"url": {
-					"raw": "https://{{HostName}}.sharepoint.com/sites/SITE/_api/web/lists",
+					"raw": "https://{{HostName}}.sharepoint.com/sites/CitDevBlog/_api/web/lists",
 					"protocol": "https",
 					"host": [
 						"{{HostName}}",
@@ -33,7 +33,7 @@
 					],
 					"path": [
 						"sites",
-						"SITE",
+						"CitDevBlog",
 						"_api",
 						"web",
 						"lists"
@@ -141,7 +141,7 @@
 		},
 		{
 			"key": "odata",
-			"value": "verboseo or nometadata",
+			"value": "verbose or nometadata",
 			"type": "string"
 		}
 	]

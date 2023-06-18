@@ -168,7 +168,7 @@
 		},
 		{
 			"key": "odata",
-			"value": "verboseo or nometadata",
+			"value": "verbose or nometadata",
 			"type": "string"
 		},
 		{

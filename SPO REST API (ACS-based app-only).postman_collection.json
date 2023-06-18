@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "26027398-1ffe-467a-b510-fce59aabb799",
+		"_postman_id": "77700f5c-ed15-4593-962f-f6088fecc9e8",
 		"name": "SPO REST API (ACS-based app-only)",
 		"description": "# ACS-based app-only\n\n### 1) Go to: [https://contoso.sharepoint.com/sites/site/_layouts/15/appregnew.aspx](https://contoso.sharepoint.com/sites/site/_layouts/15/appregnew.aspx)\n\n- Generate `Client Id` and `Client Secret`, save them\n- Add title (e.g. `Postman app`)\n- App Domain: `www.localhost.com`\n- Redirect URI: `https://www.localhost.com`\n    \n\n([Granting access using SharePoint App-Only | Microsoft Learn](https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs))\n\n### 2) Go to: [https://contoso.sharepoint.com/sites/site/_layouts/15/appinv.aspx](https://contoso.sharepoint.com/sites/site/_layouts/15/appinv.aspx)\n\nIn App Id set `Client Id` form step 1).  \nFill the Permission Request XML:\n\n``` xml\n<AppPermissionRequests AllowAppOnlyPolicy=\"true\">\n<AppPermissionRequest Scope=\"http://sharepoint/content/sitecollection/web\" Right=\"FullControl\" />\n</AppPermissionRequests>\n\n```\n\n([Add-in permissions in SharePoint | Microsoft Learn](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/add-in-permissions-in-sharepoint?redirectedfrom=MSDN#types-of-add-in-permissions-and-permission-scopes))\n\n### 3) Important!\n\n> Azure Access Control (ACS), a service of Azure Active Directory (Azure AD), has been retired on November 7, 2018 \n  \n\nConnect to SPO by **PnP PowerShell** and run [cmdlet](https://pnp.github.io/powershell/cmdlets/Set-PnPTenant.html#-disablecustomappauthentication):\n\n``` PowerShell\nSet-PnPTenant -DisableCustomAppAuthentication $false\n\n```\n\n---",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -108,7 +108,7 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "https://{{HostName}}.sharepoint.com/sites/SITE/_api/web/lists",
+					"raw": "https://{{HostName}}.sharepoint.com/sites/CitDevBlog/_api/web/lists",
 					"protocol": "https",
 					"host": [
 						"{{HostName}}",
@@ -117,7 +117,7 @@
 					],
 					"path": [
 						"sites",
-						"SITE",
+						"CitDevBlog",
 						"_api",
 						"web",
 						"lists"
@@ -175,7 +175,7 @@
 		},
 		{
 			"key": "odata",
-			"value": "verboseo or nometadata",
+			"value": "verbose or nometadata",
 			"type": "string"
 		}
 	]
