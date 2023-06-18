@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "26027398-1ffe-467a-b510-fce59aabb799",
+		"name": "SPO REST API (ACS-based app-only)",
+		"description": "# ACS-based app-only\n\n### 1) Go to: [https://contoso.sharepoint.com/sites/site/_layouts/15/appregnew.aspx](https://contoso.sharepoint.com/sites/site/_layouts/15/appregnew.aspx)\n\n- Generate `Client Id` and `Client Secret`, save them\n- Add title (e.g. `Postman app`)\n- App Domain: `www.localhost.com`\n- Redirect URI: `https://www.localhost.com`\n    \n\n([Granting access using SharePoint App-Only | Microsoft Learn](https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs))\n\n### 2) Go to: [https://contoso.sharepoint.com/sites/site/_layouts/15/appinv.aspx](https://contoso.sharepoint.com/sites/site/_layouts/15/appinv.aspx)\n\nIn App Id set `Client Id` form step 1).  \nFill the Permission Request XML:\n\n``` xml\n<AppPermissionRequests AllowAppOnlyPolicy=\"true\">\n<AppPermissionRequest Scope=\"http://sharepoint/content/sitecollection/web\" Right=\"FullControl\" />\n</AppPermissionRequests>\n\n```\n\n([Add-in permissions in SharePoint | Microsoft Learn](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/add-in-permissions-in-sharepoint?redirectedfrom=MSDN#types-of-add-in-permissions-and-permission-scopes))\n\n### 3) Important!\n\n> Azure Access Control (ACS), a service of Azure Active Directory (Azure AD), has been retired on November 7, 2018 \n  \n\nConnect to SPO by **PnP PowerShell** and run [cmdlet](https://pnp.github.io/powershell/cmdlets/Set-PnPTenant.html#-disablecustomappauthentication):\n\n``` PowerShell\nSet-PnPTenant -DisableCustomAppAuthentication $false\n\n```\n\n---",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9778069"
+	},
+	"item": [
+		{
+			"name": "Get token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"pm.collectionVariables.set(\"varBearerToken\", res.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{ClientId}}@{{TenantId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{ClientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "resource",
+							"value": "00000003-0000-0ff1-ce00-000000000000/{{HostName}}.sharepoint.com@{{TenantId}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://accounts.accesscontrol.windows.net/{{TenantId}}/tokens/OAuth/2",
+					"protocol": "https",
+					"host": [
+						"accounts",
+						"accesscontrol",
+						"windows",
+						"net"
+					],
+					"path": [
+						"{{TenantId}}",
+						"tokens",
+						"OAuth",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get web",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{varBearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json; odata={{odata}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json; odata={{odata}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://{{HostName}}.sharepoint.com/sites/SITE/_api/web/lists",
+					"protocol": "https",
+					"host": [
+						"{{HostName}}",
+						"sharepoint",
+						"com"
+					],
+					"path": [
+						"sites",
+						"SITE",
+						"_api",
+						"web",
+						"lists"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TenantId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ClientId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ClientSecret",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "HostName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "varBearerToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "odata",
+			"value": "verboseo or nometadata",
+			"type": "string"
+		}
+	]
+}
